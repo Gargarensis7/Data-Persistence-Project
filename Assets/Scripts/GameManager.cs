@@ -7,25 +7,12 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
-    private void Awake()
-    {
-        if(Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
-        DontDestroyOnLoad(gameObject);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-
+        SaveDataManager saveData = new SaveDataManager();
+        saveData.LoadFromJSON();
+        DisplayBestScore();
     }
 
     // Update is called once per frame
@@ -34,17 +21,28 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void DisplayBestScore()
+    {
+        Text bestScoreText = GameObject.Find("BestScore").GetComponent<Text>();
+        bestScoreText.text = "Best Score: " + SaveDataManager.bestPlayer + ": " + SaveDataManager.bestScore;
+    }
+
     public void StartGame()
     {
+        SaveDataManager saveData = new SaveDataManager();
+        saveData.SavePlayerName();
         SceneManager.LoadScene("main");
     }
 
     public void QuitGame()
     {
+        SaveDataManager saveData = new SaveDataManager();
+        saveData.SaveToJSON();
+
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else
         Application.Quit();
 #endif
-    }
+    } 
 }
