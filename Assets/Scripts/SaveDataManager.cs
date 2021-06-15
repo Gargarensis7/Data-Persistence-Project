@@ -27,6 +27,7 @@ public class SaveDataManager
     {
         bestScore = point;
         bestPlayer = playerName;
+        SaveToJSON();
     }
 
     [System.Serializable]
